@@ -1,0 +1,37 @@
+body{
+    background-color: #45151b;
+}
+
+h1{
+    color:#fbd9cd;
+    display: flex;
+    justify-content: center;
+}
+.Labs{
+    display:flex;
+}
+#Lab1 {
+    background-color: #f4aaba;
+    padding: 10px 50px;
+    margin: 10px;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 17px;
+}
+
+#Lab1  h3, ol, a{
+    color: #270c0f;
+}
+#Lab2 {
+    background-color: #fbd9cd;
+    padding: 10px 50px;
+    margin: 10px;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 17px;
+}
+
+#Lab2 h3, ol, a{
+    color: #45151b;
+}
+

@@ -1,0 +1,32 @@
+@startuml
+abstract class AbstractUser {
+    + name: string
+    + login: string
+    # password: string
+    + __construct(name: string, login: string, password: string)
+    + showInfo(): string
+  }
+
+  interface SuperUserInterface {
+    + getInfo(): array
+  }
+
+  class User {
+    + {static} userCount: int = 0
+    + __construct(name: string, login: string, password: string)
+    + showInfo(): string
+    + setPassword(password: string): void
+    + __destruct()
+  }
+
+  class SuperUser {
+    + {static} superUserCount: int = 0
+    + role: string
+    + __construct(name: string, login: string, password: string, role: string)
+    + showInfo(): string
+    + getInfo(): array
+  }
+AbstractUser <|-- User
+User <|-- SuperUser
+SuperUser ..|> SuperUserInterface
+@enduml
