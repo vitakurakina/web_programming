@@ -38,11 +38,10 @@ class UserDecorator extends DecoratorFactory
                '</item>';
     }
 
-    // Новый метод для Markdown
     public function bodyMd() : string
     {
         return sprintf(
-            "**%s**\n\n- Email: `%s`\n- Имя: %s\n- Фамилия: %s",
+            "**%s**\n- Email: `%s`\n- Имя: %s\n- Фамилия: %s",
             $this->title(),
             $this->user->email,
             $this->user->first_name ?? 'Не указано',

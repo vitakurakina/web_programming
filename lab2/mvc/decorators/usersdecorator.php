@@ -43,19 +43,18 @@ class UsersDecorator extends DecoratorFactory
             }, '');
     }
 
-    // Новый метод для Markdown
     public function bodyMd() : string
     {
         $counter = 1;
         return $this->collection_render(
             function($item) use (&$counter) {
                 $decorated_item = new UserDecorator($item);
-                return "## " . $counter++ . ". " . $decorated_item->title() . "\n\n" .
+                return "## " . $counter++ . ". " . $decorated_item->title() . "\n" .
                        "- **Email:** `" . $item->email . "`\n" .
                        "- **Имя:** " . ($item->first_name ?? 'Не указано') . "\n" .
                        "- **Фамилия:** " . ($item->last_name ?? 'Не указано');
             },
-            "\n\n---\n\n"
+            "\n\n"
         );
     }
 }
