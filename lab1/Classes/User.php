@@ -20,7 +20,7 @@ class User extends AbstractUser{
              . "User's password: {$this->password}<br>";
     }
 
-    public function setpassword(string $password):void
+    public function setPassword(string $password):void
     {
         $this->password = $password;
     }

@@ -4,7 +4,7 @@ abstract class AbstractUser {
     + login: string
     # password: string
     + __construct(name: string, login: string, password: string)
-    + showInfo(): string
+    + {abstract} showInfo(): string
   }
 
   interface SuperUserInterface {

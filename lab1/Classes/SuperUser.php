@@ -6,10 +6,13 @@ namespace lab1\Classes;
 class SuperUser extends User implements SuperUserInterface {
     public $role;
     public static $superUserCount = 0;
-    public function __construct($name, $login, $password, $role)
+
+    public function __construct(string $name, string $login, string $password, string $role)
     {
-        parent::__construct($name, $login, $password);
-        $this->role = $role;
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+        $this ->role = $role;
         self::$superUserCount++;
     }
 
