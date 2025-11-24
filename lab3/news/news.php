@@ -1,32 +1,17 @@
 <?php
-  require_once 'NewsDB.class.php';
 
-  $news = new NewsDB();
-  $errMsg = "";
-
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      require_once 'save_news.inc.php';
-}
-
-if (isset($_GET['del'])) {
-    require_once "delete_news.inc.php";
-}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Новостная лента</title>
 	<meta charset="utf-8">
-  <link rel="stylesheet" href="news_style.css">
 </head>
 <body>
   <h1>Последние новости</h1>
   <?php
-    if ($errMsg != "") {
-        echo "<p style='color:red;'>$errMsg</p>";
-    }
+
   ?>
-  <?php include "get_news.inc.php"; ?>
   <form action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
     Заголовок новости:<br>
     <input type="text" name="title"><br>

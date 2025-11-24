@@ -4,17 +4,21 @@ body{
 
 h1{
     color:#fbd9cd;
-    display: flex;
+    display:flex;
     justify-content: center;
 }
 .Labs{
-    display:flex;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: left;
 }
 #Lab1 {
-    background-color: #f4aaba;
+    background-color: #fbd9cd;
     padding: 10px 50px;
-    margin: 10px;
-    width: fit-content;
+
+        width: calc(33.33% - 20px);
+    box-sizing: border-box;   
     height: fit-content;
     border-radius: 17px;
 }
@@ -23,10 +27,11 @@ h1{
     color: #270c0f;
 }
 #Lab2 {
-    background-color: #fbd9cd;
+    background-color: #f4aaba;
     padding: 10px 50px;
-    margin: 10px;
-    width: fit-content;
+
+        width: calc(33.33% - 20px);
+    box-sizing: border-box;   
     height: fit-content;
     border-radius: 17px;
 }
@@ -35,3 +40,22 @@ h1{
     color: #45151b;
 }
 
+#Lab3 {
+    background-color: #f8c3c4;
+    padding: 10px 50px;
+
+        width: calc(33.33% - 20px);
+    box-sizing: border-box;   
+    height: fit-content;
+    border-radius: 17px;
+}
+
+#Lab4 {
+    background-color: #f6b7bf;
+    padding: 10px 50px;
+
+    width: calc(33.33% - 20px);
+    box-sizing: border-box;   
+    height: fit-content;
+    border-radius: 17px;
+}

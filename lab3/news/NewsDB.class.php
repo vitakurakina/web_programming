@@ -10,9 +10,7 @@ class NewsDB implements INewsDB {
     }
 
     public function __construct() {
-
         $dbExists = file_exists(self::DB_NAME);
-
         $this->_db = new SQLite3(self::DB_NAME);
 
         if (!$dbExists) {
@@ -21,31 +19,36 @@ class NewsDB implements INewsDB {
                 die("Файл news.txt не найден!");
             }
 
-            $content = file_get_contents($sqlFile);
+            // Читаем файл построчно, пропускаем комментарии
+            $content = file($sqlFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $queries = [];
+            $current = '';
 
-            $lines = explode("\n", $content);
-            $cleaned = '';
-            foreach ($lines as $line) {
+            foreach ($content as $line) {
                 $line = trim($line);
+                // Пропускаем строки с комментариями (#, ### и т.п.)
                 if ($line === '' || $line[0] === '#') continue;
-                $cleaned .= $line . "\n";
-            }
 
-            $queries = explode(';', $cleaned);
+                $current .= $line . "\n";
+                if (strpos($line, ';') !== false) {
+                    $queries[] = $current;
+                    $current = '';
+                }
+            }
 
             foreach ($queries as $query) {
                 $query = trim($query);
-                if ($query === '') continue;
-                $ok = $this->_db->exec($query);
-
-                if (!$ok) {
-                    die("Ошибка при выполнении запроса: " . $this->_db->lastErrorMsg() . "\nЗапрос: $query");
+                if (!empty($query)) {
+                    $ok = $this->_db->exec($query);
+                    if (!$ok) {
+                        echo "<b>Ошибка SQL:</b> " . $this->_db->lastErrorMsg() . "<br>";
+                        echo "<pre>$query</pre><hr>";
+                    }
                 }
             }
-        
-        }   
-
+        }
     }
+
 
     public function __destruct() {
         $this->_db->close();
@@ -80,6 +83,6 @@ class NewsDB implements INewsDB {
         $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
         return $stmt->execute() ? true : false;
     }
-
 }
+$news = new NewsDB();
 ?>

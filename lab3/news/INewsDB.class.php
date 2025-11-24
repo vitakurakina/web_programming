@@ -1,24 +1,34 @@
 <?php
+/**
+ *	inerface INewsDB
+ *	содержит основные методы для работы с новостной лентой
+*/
 interface INewsDB{
-	/**	
-	 *	@param string
-	 *	@param string
-	 *	@param string
-	 *	@param string
+	/**
+	 *	Добавление новой записи в новостную ленту
 	 *	
-	 *	@return boolean
+	 *	@param string $title - заголовок новости
+	 *	@param string $category - категория новости
+	 *	@param string $description - текст новости
+	 *	@param string $source - источник новости
+	 *	
+	 *	@return boolean - результат успех/ошибка
 	*/
 	function saveNews($title, $category, $description, $source);
 	
-    /**	
-	 *	@return array
+    /**
+	 *	Выборка всех записей из новостной ленты
+	 *	
+	 *	@return array - результат выборки в виде массива
 	*/
 	function getNews();
 	
     /**
-	 *	@param integer
+	 *	Удаление записи из новостной ленты
 	 *	
-	 *	@return boolean
+	 *	@param integer $id - идентификатор удаляемой записи
+	 *	
+	 *	@return boolean - результат успех/ошибка
 	*/
 	function deleteNews($id);
 }
