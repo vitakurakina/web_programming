@@ -2,6 +2,7 @@
 require_once 'INewsDB.class.php';
 
 class NewsDB implements INewsDB {
+
     const DB_NAME = 'news.db';
     private $_db;
 
@@ -10,79 +11,132 @@ class NewsDB implements INewsDB {
     }
 
     public function __construct() {
-        $dbExists = file_exists(self::DB_NAME);
-        $this->_db = new SQLite3(self::DB_NAME);
-
-        if (!$dbExists) {
-            $sqlFile = __DIR__ . '/news.txt';
-            if (!file_exists($sqlFile)) {
-                die("Файл news.txt не найден!");
-            }
-
-            // Читаем файл построчно, пропускаем комментарии
-            $content = file($sqlFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            $queries = [];
-            $current = '';
-
-            foreach ($content as $line) {
-                $line = trim($line);
-                // Пропускаем строки с комментариями (#, ### и т.п.)
-                if ($line === '' || $line[0] === '#') continue;
-
-                $current .= $line . "\n";
-                if (strpos($line, ';') !== false) {
-                    $queries[] = $current;
-                    $current = '';
-                }
-            }
-
-            foreach ($queries as $query) {
-                $query = trim($query);
-                if (!empty($query)) {
-                    $ok = $this->_db->exec($query);
-                    if (!$ok) {
-                        echo "<b>Ошибка SQL:</b> " . $this->_db->lastErrorMsg() . "<br>";
-                        echo "<pre>$query</pre><hr>";
-                    }
-                }
-            }
+        try {
+            $this->_db = new SQLite3(self::DB_NAME);
+            $this->_db->busyTimeout(5000);
+            $this->initDatabase();
+        } catch (Exception $e) {
+            die("Ошибка подключения к базе данных: " . $e->getMessage());
         }
     }
 
-
     public function __destruct() {
-        $this->_db->close();
-        unset($this->_db);
+        if ($this->_db) {
+            $this->_db->close();
+        }
+    }
+
+    private function initDatabase() {
+        $tableExists = $this->_db->querySingle("SELECT name FROM sqlite_master WHERE type='table' AND name='msgs'");
+        
+        if (!$tableExists) {
+            $createMsgsTable = "
+                CREATE TABLE msgs(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT,
+                    category INTEGER,
+                    description TEXT,
+                    source TEXT,
+                    datetime INTEGER
+                )
+            ";
+
+            $createCategoryTable = "
+                CREATE TABLE category(
+                    id INTEGER PRIMARY KEY,
+                    name TEXT
+                )
+            ";
+
+            $this->_db->exec($createMsgsTable);
+            $this->_db->exec($createCategoryTable);
+            
+            $this->_db->exec("INSERT INTO category(id, name) VALUES (1, 'Политика')");
+            $this->_db->exec("INSERT INTO category(id, name) VALUES (2, 'Культура')");
+            $this->_db->exec("INSERT INTO category(id, name) VALUES (3, 'Спорт')");
+        }
     }
 
     public function saveNews($title, $category, $description, $source) {
-        $stmt = $this->_db->prepare('INSERT INTO msgs (title, category, description, source, datetime)
-                                     VALUES (:title, :category, :description, :source, :datetime)');
-        $stmt->bindValue(':title', $title, SQLITE3_TEXT);
-        $stmt->bindValue(':category', $category, SQLITE3_INTEGER);
-        $stmt->bindValue(':description', $description, SQLITE3_TEXT);
-        $stmt->bindValue(':source', $source, SQLITE3_TEXT);
-        $stmt->bindValue(':datetime', time(), SQLITE3_INTEGER);
-        return $stmt->execute() ? true : false;
+        try {
+            $stmt = $this->_db->prepare("
+                INSERT INTO msgs (title, category, description, source, datetime) 
+                VALUES (?, ?, ?, ?, ?)
+            ");
+
+            if (!$stmt) {
+                return false;
+            }
+
+            $stmt->bindValue(1, $title, SQLITE3_TEXT);
+            $stmt->bindValue(2, (int)$category, SQLITE3_INTEGER);
+            $stmt->bindValue(3, $description, SQLITE3_TEXT);
+            $stmt->bindValue(4, $source, SQLITE3_TEXT);
+            $stmt->bindValue(5, time(), SQLITE3_INTEGER);
+
+            $result = $stmt->execute();
+            return $result !== false;
+
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function getNews() {
-        $sql = "SELECT msgs.id as id, title, category.name as category, description, source, datetime
-                FROM msgs INNER JOIN category ON msgs.category = category.id
-                ORDER BY msgs.id DESC";
-        $result = $this->_db->query($sql);
-        $news = [];
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-            $news[] = $row;
+        try {
+            $query = "
+                SELECT msgs.id as id, title, category.name as category, description, source, datetime
+                FROM msgs 
+                LEFT JOIN category ON category.id = msgs.category
+                ORDER BY msgs.id DESC
+            ";
+
+            $result = $this->_db->query($query);
+
+            if (!$result) {
+                return false;
+            }
+
+            $news = [];
+            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                $news[] = $row;
+            }
+
+            return $news;
+
+        } catch (Exception $e) {
+            return false;
         }
-        return $news;
     }
 
     public function deleteNews($id) {
-        $stmt = $this->_db->prepare('DELETE FROM msgs WHERE id = :id');
-        $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
-        return $stmt->execute() ? true : false;
+        try {
+            $checkStmt = $this->_db->prepare("SELECT COUNT(*) as count FROM msgs WHERE id = ?");
+            if (!$checkStmt) {
+                return false;
+            }
+            
+            $checkStmt->bindValue(1, (int)$id, SQLITE3_INTEGER);
+            $checkResult = $checkStmt->execute();
+            $row = $checkResult->fetchArray(SQLITE3_ASSOC);
+            
+            if ($row['count'] == 0) {
+                return false;
+            }
+            
+            $stmt = $this->_db->prepare("DELETE FROM msgs WHERE id = ?");
+            if (!$stmt) {
+                return false;
+            }
+            
+            $stmt->bindValue(1, (int)$id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+            
+            return $result !== false && $this->_db->changes() === 1;
+
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
-$news = new NewsDB();
 ?>

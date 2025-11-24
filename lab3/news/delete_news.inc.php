@@ -1,17 +1,16 @@
 <?php
-if (!isset($_GET['del'])) {
-    return;
-}
-
-$id = intval($_GET['del']);
-if ($id <= 0) {
+if (!isset($_GET['delete']) || !is_numeric($_GET['delete']) || intval($_GET['delete']) <= 0) {
     header("Location: news.php");
-    exit;
+    exit();
 }
 
-if (!$news->deleteNews($id)) {
-    $errMsg = "Произошла ошибка при удалении новости";
+$deleteId = intval($_GET['delete']);
+$result = $news->deleteNews($deleteId);
+
+if ($result) {
+    header("Location: news.php");
+    exit();
 } else {
-    header("Location: news.php");
-    exit;
+    $errMsg = "Произошла ошибка при удалении новости";
 }
+?>
