@@ -39,23 +39,3 @@ h1{
 #Lab2 h3, ol, a{
     color: #45151b;
 }
-
-#Lab3 {
-    background-color: #f8c3c4;
-    padding: 10px 50px;
-
-        width: calc(33.33% - 20px);
-    box-sizing: border-box;   
-    height: fit-content;
-    border-radius: 17px;
-}
-
-#Lab4 {
-    background-color: #f6b7bf;
-    padding: 10px 50px;
-
-    width: calc(33.33% - 20px);
-    box-sizing: border-box;   
-    height: fit-content;
-    border-radius: 17px;
-}
