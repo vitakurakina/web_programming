@@ -125,31 +125,39 @@ class NewsDB implements INewsDB, IteratorAggregate
     }
 
     public function deleteNews($id)
-    {
-        try {
-            $checkStmt = $this->_db->prepare(
-                "SELECT COUNT(*) as count FROM msgs WHERE id = ?"
-            );
-            if (!$checkStmt) {
-                return false;
-            }
-            $checkStmt->bindValue(1, (int)$id, SQLITE3_INTEGER);
-            $checkResult = $checkStmt->execute();
-            $row = $checkResult->fetchArray(SQLITE3_ASSOC);
-            if ($row['count'] == 0) {
-                return false;
-            }
-            $stmt = $this->_db->prepare("DELETE FROM msgs WHERE id = ?");
-            if (!$stmt) {
-                return false;
-            }
-            $stmt->bindValue(1, (int)$id, SQLITE3_INTEGER);
-            $result = $stmt->execute();
-            return $result !== false && $this->_db->changes() === 1;
-        } catch (Exception $e) {
+{
+    try {
+        $checkStmt = $this->_db->prepare(
+            "SELECT COUNT(*) as count FROM msgs WHERE id = ?"
+        );
+        if (!$checkStmt) {
             return false;
         }
+        $checkStmt->bindValue(1, (int)$id, SQLITE3_INTEGER);
+        $checkResult = $checkStmt->execute();
+        $row = $checkResult->fetchArray(SQLITE3_ASSOC);
+        if ($row['count'] == 0) {
+            return false;
+        }
+        
+        $stmt = $this->_db->prepare("DELETE FROM msgs WHERE id = ?");
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bindValue(1, (int)$id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        
+        // Переносим вызов createRss() после успешного удаления
+        if ($result !== false && $this->_db->changes() === 1) {
+            $this->createRss(); 
+            return true;
+        } else {
+            return false;
+        }
+    } catch (Exception $e) {
+        return false;
     }
+}
 
     public function getIterator(): Traversable{
         return new ArrayIterator($this->items);

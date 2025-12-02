@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
-    <channel>
-        <title>Заголовок новостной ленты</title>
-        <link>http://n93077gb.beget.tech/lab5/news/news.php</link>
-        <item>
-            <title>Заголовок новости</title>
-            <link>http://n93077gb.beget.tech/lab5/news/news.php</link>
-            <description>Содержание новости</description>
-            <pubDate>Дата публикации новости</pubDate>
-            <category>Категория новости</category>
-        </item>
-    </channel>
+  <channel>
+    <title>Последние новости</title>
+    <link>http://n93077gb.beget.tech/news/news.php</link>
+    <item>
+      <title>3</title>
+      <link>http://n93077gb.beget.tech/news/news.php?view=6</link>
+      <description><![CDATA[3]]></description>
+      <pubDate>Tue, 02 Dec 2025 13:04:56 +0100</pubDate>
+      <category>Политика</category>
+    </item>
+  </channel>
 </rss>

@@ -6,7 +6,7 @@ $image = imagecreatefromjpeg('noise.jpg');
 $width = imagesx($image);
 $height = imagesy($image);
 
-$characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789';
+$characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 $captcha_length = rand(5, 6);
 $captcha_string = '';
 

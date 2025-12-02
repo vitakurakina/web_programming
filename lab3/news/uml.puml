@@ -19,34 +19,10 @@ class NewsDB {
     # getDb() : SQLite3
     - initDatabase() : void
 }
-
-' class delete_news.inc {
-'     + $deleteId : integer
-'     + $result : boolean
-' }
-
-' class get_news.inc {
-'     + $newsData : array
-'     + $newsCount : integer
-' }
-
-' class save_news.inc {
-'     + $title : string
-'     + $category : int
-'     + $description : string
-'     + $source : string
-' }
-
-' class news.php {
-'     + $news : NewsDB
-'     + $errMsg : string
-' }
+class SQLite3
 
 INewsDB <|.. NewsDB : implements
+NewsDB --> SQLite3 : uses
 
-' news.php --> NewsDB : creates
-' delete_news.inc --> NewsDB : deleteNews()
-' get_news.inc --> NewsDB : getNews()
-' save_news.inc --> NewsDB : saveNews()
 
 @enduml
