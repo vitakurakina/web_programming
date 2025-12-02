@@ -13,4 +13,9 @@
 		{
 			return $this->findMany("SELECT id, title FROM page");
 		}
+
+		public function getByRange($from, $to)
+		{
+			return $this->findMany("SELECT * FROM page WHERE id>=$from AND id<=$to");
+		}
 	}

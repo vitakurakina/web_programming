@@ -1,5 +1,5 @@
 <?php
 	define('DB_HOST', 'localhost');
-	define('DB_USER', '<login>_mvc');
-	define('DB_PASS', '******');
-	define('DB_NAME', '<login>_mvc');
+	define('DB_USER', 'n93077gb_mvc');
+	define('DB_PASS', 'Qwerty123_');
+	define('DB_NAME', 'n93077gb_mvc');
