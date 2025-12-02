@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Заголовок новостной ленты</title>
+        <link>http://n93077gb.beget.tech/lab5/news/news.php</link>
+        <item>
+            <title>Заголовок новости</title>
+            <link>http://n93077gb.beget.tech/lab5/news/news.php</link>
+            <description>Содержание новости</description>
+            <pubDate>Дата публикации новости</pubDate>
+            <category>Категория новости</category>
+        </item>
+    </channel>
+</rss>
