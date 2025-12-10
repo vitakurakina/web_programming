@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /lab8/
+
+RewriteCond %{REQUEST_URI} !^/project/webroot/
+RewriteRule .+ index.php
